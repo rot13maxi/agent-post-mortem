@@ -1,0 +1,48 @@
+{
+  "skill_name": "post-mortem",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "run a post-mortem on this: we had Claude implement the intake form submission feature. all the unit tests passed, Claude said it was done. but when i actually went to test it in the browser, clicking submit with an empty required field just silently did nothing — no error message, no validation, just nothing. the form wasn't validating at all. the tests were all mocking the validation function so they passed even though the real implementation was broken.",
+      "expected_output": "A complete COE document saved to docs/postmortems/ with a five-whys that reaches a systemic root cause (not 'we forgot to test'), lessons learned that call out the mock-over-test problem, and action items tagged with types like [TEST] and [CLAUDE.md] that are specific and concrete.",
+      "files": [],
+      "expectations": [
+        "Creates a file in docs/postmortems/ with a date-prefixed name",
+        "Document contains a Five Whys section with at least 4 why iterations",
+        "Root cause identifies something systemic (e.g., mocked tests don't verify real behavior, no E2E coverage, no browser verification requirement)",
+        "At least one action item is tagged [TEST]",
+        "At least one action item is tagged [CLAUDE.md] or [HOOK]",
+        "Action items are specific (not vague like 'improve testing')",
+        "Document contains a Summary, Timeline, Resolution, Lessons Learned, and Action Items section"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "/coe i had 4 PRs open and asked you to merge them all in sequence. after the merges, i noticed that the dark mode toggle feature was completely gone — it had been implemented in PR #2 but got clobbered when PR #4 merged because they both touched the same ThemeContext file. there was no conflict detected because PR #4 branched off master before PR #2 was merged, so git didn't see it as a conflict.",
+      "expected_output": "A COE document that correctly identifies the silent clobber as the failure mode, traces it to the rebase/merge order problem, and produces action items that would prevent or detect this (e.g., requiring rebase-before-merge, adding CI checks, or changing the merge workflow).",
+      "files": [],
+      "expectations": [
+        "Creates a file in docs/postmortems/ with a date-prefixed name",
+        "Five Whys reaches the root cause around branch ordering / no rebase-before-merge requirement",
+        "Action items address the merge workflow specifically",
+        "At least one action item is tagged [PROCESS] or [CI]",
+        "Document correctly identifies this as a silent clobber (not a merge conflict)",
+        "Document contains all required sections: Summary, Timeline, Resolution, Five Whys, Lessons Learned, Action Items"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "post-mortem: I asked claude to build the CSV export feature for the work items table. claude implemented it and said it was done. i verified it worked for small datasets. a week later we had 500+ work items and the export just hung indefinitely — the page froze, never downloaded anything. turns out claude used a synchronous loop to build the CSV string in memory and the browser just choked. there were no tests for large datasets and claude never mentioned any performance considerations.",
+      "expected_output": "A COE with a five-whys that reaches something about how Claude declares features done without performance testing or with-data verification, and action items that address both the test gap and the process gap around declaring features complete.",
+      "files": [],
+      "expectations": [
+        "Creates a file in docs/postmortems/ with a date-prefixed name",
+        "Five Whys reaches a root cause about missing performance/scale testing or the definition-of-done not including scale verification",
+        "At least one action item is tagged [TEST] addressing scale/performance testing",
+        "At least one action item is tagged [CLAUDE.md] or [PROCESS] addressing when a feature can be declared done",
+        "Action items are specific enough to be actionable",
+        "Document contains all required sections"
+      ]
+    }
+  ]
+}
